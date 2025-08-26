@@ -100,16 +100,16 @@ def cli(args):
         data = json.loads(output)
         print('\n'.join(item['name'] for item in data))
     elif opts.action == 'switch':
-        os.execvp('sudo', ['ip', 'ip', 'netns', 'exec', opts.netns, 'sudo', '-u', getpass.getuser(), os.environ['SHELL'], '-i'])
+        os.execvp('sudo', ['sudo', 'ip', 'netns', 'exec', opts.netns, 'sudo', '-u', getpass.getuser(), os.environ['SHELL'], '-i'])
     elif opts.action == 'exec':
-        os.execvp('sudo', ['ip', 'ip', 'netns', 'exec', opts.netns, 'sudo', '-u', getpass.getuser(), *opts.command])
+        os.execvp('sudo', ['sudo', 'ip', 'netns', 'exec', opts.netns, 'sudo', '-u', getpass.getuser(), *opts.command])
     else:
         raise RuntimeError('congratulations, you reached unreachable code')
 
 
 def _conditional_elevate() -> None:
     if os.getuid() != 0 and os.isatty(sys.stdin.fileno()):
-        os.execvp('sudo', [sys.argv[0], *sys.argv])
+        os.execvp('sudo', ['sudo', *sys.argv])
 
 
 @dataclasses.dataclass
